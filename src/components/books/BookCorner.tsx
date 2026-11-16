@@ -31,7 +31,7 @@ function EditorialImage({ image, className }: { image: CornerImage; className?: 
 
 function RuleLabel({ children }: { children: React.ReactNode }) {
   return (
-    <div className="border-y border-[#111827]/25 py-2">
+    <div className="border-y border-[#111827]/25 py-2 dark:border-white/25">
       <h1 className="font-serif text-sm font-medium tracking-[-0.02em]">{children}</h1>
     </div>
   );
@@ -45,17 +45,17 @@ function ResultList({ books }: { books: Book[] }) {
   }
 
   return (
-    <div className="divide-y divide-[#111827]/15 border-y border-[#111827]/20">
+    <div className="divide-y divide-[#111827]/15 border-y border-[#111827]/20 dark:divide-white/15 dark:border-white/20">
       {books.map((book) => (
         <div
           key={book.id}
           className="grid gap-1 py-3 text-xs sm:grid-cols-[1fr_1fr_auto] sm:items-center sm:gap-4"
         >
           <p className="font-medium">{book.title}</p>
-          <p className="text-[#111827]/60">
+          <p className="text-[#111827]/60 dark:text-white/60">
             {book.authors.join(", ")} · {book.category?.name ?? "Uncategorised"}
           </p>
-          <p className="text-[10px] uppercase tracking-[0.12em] text-[#111827]/50">
+          <p className="text-[10px] uppercase tracking-[0.12em] text-[#111827]/50 dark:text-white/50">
             {book.availableCopies > 0
               ? `${book.availableCopies} available`
               : "Currently unavailable"}
@@ -98,7 +98,7 @@ export function BookCorner({
   return (
     <div className="mx-auto max-w-[1180px]">
       <RuleLabel>Book Corner</RuleLabel>
-      <p className="max-w-3xl border-b border-[#111827]/25 py-3 text-[10px] leading-4 text-[#111827]/70 sm:text-[11px]">
+      <p className="max-w-3xl border-b border-[#111827]/25 py-3 text-[10px] leading-4 text-[#111827]/70 dark:border-white/25 dark:text-white/70 sm:text-[11px]">
         A small collection of carefully selected books and visual references for people who enjoy
         thoughtful spaces, useful ideas, and beautiful things.
       </p>
@@ -143,19 +143,19 @@ export function BookCorner({
         </div>
       </section>
 
-      <section className="border-t border-[#111827]/25 pt-5">
+      <section className="border-t border-[#111827]/25 pt-5 dark:border-white/25">
         <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
           <div>
             <p className="font-serif text-lg">
               {mode === "search" ? "Search the collection" : "Find a book"}
             </p>
-            <p className="mt-1 text-[10px] text-[#111827]/60">
+            <p className="mt-1 text-[10px] text-[#111827]/60 dark:text-white/60">
               {isFiltered ? `${filteredBooks.length} matching titles` : `${books.length} titles`}
             </p>
           </div>
           <div className="w-full sm:max-w-md">
             <div className="flex items-center gap-2">
-              <Search className="size-3.5 text-[#111827]/55" />
+              <Search className="size-3.5 text-[#111827]/55 dark:text-white/55" />
               <SearchBar
                 value={filters.q ?? ""}
                 onChange={(q) => onChange({ q: q.slice(0, 100) || undefined })}

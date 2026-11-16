@@ -2,7 +2,9 @@
 @source "../src";
 @import "tw-animate-css";
 
-/* Light mode only — গ্রন্থাগার design system (Readly-inspired editorial minimalism). */
+@custom-variant dark (&:where(.dark, .dark *));
+
+/* গ্রন্থাগার design system (Readly-inspired editorial minimalism). */
 
 @theme inline {
   --font-sans: "Plus Jakarta Sans", "Noto Sans Bengali", ui-sans-serif, system-ui, sans-serif;
@@ -85,6 +87,44 @@
     radial-gradient(70% 60% at 50% 110%, oklch(0.86 0.02 250 / 90%), transparent 70%);
 }
 
+.dark {
+  --background: oklch(0.18 0.025 265);
+  --foreground: oklch(0.94 0.012 250);
+  --ink: oklch(0.11 0.025 265);
+  --card: oklch(0.235 0.03 265);
+  --card-foreground: oklch(0.94 0.012 250);
+  --popover: oklch(0.235 0.03 265);
+  --popover-foreground: oklch(0.94 0.012 250);
+  --primary: oklch(0.62 0.17 257);
+  --primary-foreground: oklch(0.98 0.005 250);
+  --primary-soft: oklch(0.62 0.17 257 / 18%);
+  --secondary: oklch(0.34 0.035 255);
+  --secondary-foreground: oklch(0.94 0.012 250);
+  --bluegray: oklch(0.55 0.04 255);
+  --muted: oklch(0.27 0.03 265);
+  --muted-foreground: oklch(0.72 0.035 255);
+  --accent: oklch(0.82 0.17 123);
+  --accent-foreground: oklch(0.13 0.025 265);
+  --lime: oklch(0.82 0.17 123);
+  --lime-foreground: oklch(0.13 0.025 265);
+  --destructive: oklch(0.65 0.19 25);
+  --destructive-foreground: oklch(0.98 0.005 250);
+  --warning: oklch(0.78 0.14 70);
+  --success: oklch(0.68 0.13 155);
+  --border: oklch(0.34 0.035 255);
+  --input: oklch(0.34 0.035 255);
+  --ring: oklch(0.62 0.17 257);
+  --shadow-book-v:
+    0 1px 2px oklch(0.05 0.02 265 / 35%), 0 12px 24px -10px oklch(0.05 0.02 265 / 65%);
+  --shadow-soft-v:
+    0 1px 2px oklch(0.05 0.02 265 / 30%), 0 10px 30px -14px oklch(0.05 0.02 265 / 55%);
+  --shadow-float-v: 0 24px 60px -20px oklch(0.05 0.02 265 / 75%);
+  --gradient-aura:
+    radial-gradient(60% 50% at 20% 100%, oklch(0.82 0.17 123 / 18%), transparent 70%),
+    radial-gradient(55% 50% at 85% 95%, oklch(0.62 0.17 257 / 24%), transparent 70%),
+    radial-gradient(70% 60% at 50% 110%, oklch(0.34 0.035 255 / 55%), transparent 70%);
+}
+
 @layer base {
   * {
     border-color: var(--color-border);
@@ -92,6 +132,9 @@
   html {
     color-scheme: light;
     overflow-x: hidden;
+  }
+  html.dark {
+    color-scheme: dark;
   }
   body {
     background-color: var(--color-background);

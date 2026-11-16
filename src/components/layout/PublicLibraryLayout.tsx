@@ -4,6 +4,7 @@ import { LogIn } from "lucide-react";
 import { Logo } from "@/components/shared/Logo";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/contexts/auth-context";
+import { ThemeToggle } from "@/components/theme/ThemeProvider";
 import { AppLayout } from "./AppLayout";
 
 export function PublicLibraryLayout({
@@ -34,6 +35,7 @@ export function PublicLibraryLayout({
               <Link to="/book-search" className="transition-opacity hover:opacity-50">
                 Search
               </Link>
+              <ThemeToggle className="size-7 border-0 bg-transparent" />
               <Link to="/login" className="transition-opacity hover:opacity-50">
                 Login
               </Link>
@@ -55,6 +57,7 @@ export function PublicLibraryLayout({
             <Button asChild variant="ghost" size="sm">
               <Link to="/explore">Explore</Link>
             </Button>
+            <ThemeToggle />
             <Button asChild size="sm">
               <Link to="/login">
                 <LogIn className="size-4" />

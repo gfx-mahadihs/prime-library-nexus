@@ -2,6 +2,7 @@ import { Link } from "@tanstack/react-router";
 import { Bell, BookMarked, Compass, Home, Search, User } from "lucide-react";
 import { useNotifications, useProfile } from "@/hooks/use-library";
 import { Logo } from "@/components/shared/Logo";
+import { ThemeToggle } from "@/components/theme/ThemeProvider";
 import { cn } from "@/lib/utils";
 
 export const userNav = [
@@ -104,6 +105,7 @@ export function HeaderActions({ className }: { className?: string }) {
           initials
         )}
       </Link>
+      <ThemeToggle />
     </div>
   );
 }
