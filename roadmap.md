@@ -1,0 +1,13 @@
+# Secure administration
+
+- [x] Repair Explore search synchronization and retries; verify public/signed-in browsing on desktop and mobile and add external-host configuration fallback.
+- [x] Open homepage, catalogue, and book details without login, preserving member actions.
+- [x] Grant public catalogue/cover reads only and verify administrative denial.
+- [x] Test signed-out browsing, filters, details, and mobile layout.
+- [x] Add secure book-cover uploads and verify saved covers on reader book details.
+- [x] Improve book-management navigation and rename the website to গ্রন্থাগার.
+- [x] Add server-enforced admin and super-admin permissions and audit history.
+- [x] Build protected catalogue, member, circulation, and owner controls.
+- [x] Verify admin editing, sign-out denial, admin-to-owner denial, and database security configuration.
+- [x] Assign initial super admin (nv.tuhin@gmail.com) and verify role state.
+- [x] Verify super-admin access in the preview signed in as nv.tuhin@gmail.com (members list + audit history load, no page errors).
