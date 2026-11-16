@@ -16,7 +16,7 @@ interface Props {
 export function BookCover({ bookId, src, title, className, shared, eager }: Props) {
   const [failedSrc, setFailedSrc] = useState<string>();
   const privateCover = src?.startsWith('storage://book-covers/') === true;
-  const resolved = useQuery({ queryKey: ['book-cover', src], queryFn: () => library.resolveBookCover(src ?? ''), enabled: privateCover, staleTime: 30 * 60 * 1000, refetchInterval: 30 * 60 * 1000 });
+  const resolved = useQuery({ queryKey: ['book-cover', src], queryFn: () => library.resolveBookCover(src ?? ''), enabled: privateCover, staleTime: 4 * 60 * 1000, refetchInterval: 4 * 60 * 1000 });
   const style = shared && bookId ? { viewTransitionName: `book-${bookId}` } : undefined;
   const source = privateCover ? resolved.data : src;
   const url = source ? (source.includes("openlibrary") ? `${source}?default=false` : source) : null;

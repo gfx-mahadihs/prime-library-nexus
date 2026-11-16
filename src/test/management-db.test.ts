@@ -34,6 +34,17 @@ describe.skipIf(!process.env.SUPABASE_DB_URL)('Management database security conf
       expect(roles.definition).not.toContain('student');
     } finally { await sql.end(); }
   });
+  it('scopes member author links and denies direct anonymous cover storage access', async () => {
+    const sql = postgres(process.env.SUPABASE_DB_URL!, { max: 1, prepare: false });
+    try {
+      const [links] = await sql`select qual from pg_policies where schemaname='public' and tablename='book_authors' and policyname='members read book authors'`;
+      expect(links.qual).toContain('book_authors.book_id');
+      expect(links.qual).toContain('book_authors.author_id');
+      expect(links.qual).not.toContain('auth.uid() IS NOT NULL');
+      const policies = await sql`select policyname from pg_policies where schemaname='storage' and tablename='objects' and cmd in ('SELECT','ALL') and ('anon'=any(roles) or 'public'=any(roles))`;
+      expect(policies).toHaveLength(0);
+    } finally { await sql.end(); }
+  });
   it('restricts upload paths and allows readers to view covers', async () => {
     const url = process.env.SUPABASE_DB_URL;
     if (!url) throw new Error('Test connection unavailable');

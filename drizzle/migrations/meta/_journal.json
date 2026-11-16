@@ -71,6 +71,13 @@
       "when": 1794289274886,
       "tag": "0009_restrict_anonymous_catalogue_grants",
       "breakpoints": true
+    },
+    {
+      "idx": 10,
+      "version": "7",
+      "when": 1794816705617,
+      "tag": "0010_scope_member_author_links_and_remove_public_storage_reads",
+      "breakpoints": true
     }
   ]
 }

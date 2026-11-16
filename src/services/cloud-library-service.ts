@@ -1,4 +1,5 @@
 import { fetchPublicCatalogue } from "./public-catalogue.functions";
+import { resolvePublicBookCover } from './public-book-cover.functions';
 import { supabase } from "@/integrations/supabase/client";
 import type { LibraryService } from "./library-service";
 import { validateBookCover } from '@/lib/book-cover-upload';
@@ -382,6 +383,8 @@ export const cloudLibraryService: LibraryService = {
   },
   async resolveBookCover(reference) {
     if (!reference.startsWith('storage://book-covers/')) return reference;
+    const { data: session } = await supabase.auth.getSession();
+    if (!session.session) return resolvePublicBookCover({ data: { reference } });
     const { data, error } = await supabase.storage.from('book-covers').createSignedUrl(reference.slice('storage://book-covers/'.length), 3600);
     fail(error);
     if (!data?.signedUrl) throw new Error('Book cover is unavailable.');
