@@ -93,12 +93,19 @@ export function BookGrid({ children }: { children: ReactNode }) {
   );
 }
 
-export function FeaturedBookCard({ book }: { book: Book }) {
+export function FeaturedBookCard({
+  book,
+  viewTransition = true,
+}: {
+  book: Book;
+  viewTransition?: boolean;
+}) {
   return (
     <Link
       to="/books/$id"
       params={{ id: book.id }}
-      viewTransition
+      viewTransition={viewTransition}
+      tabIndex={viewTransition ? undefined : -1}
       className="group relative flex w-[270px] max-w-[85vw] shrink-0 snap-start items-end gap-3.5 overflow-hidden rounded-3xl bg-card p-4 shadow-soft sm:w-[340px] sm:gap-4 sm:p-5"
     >
       <div className="absolute inset-x-0 bottom-0 h-2/3 bg-gradient-to-t from-primary-soft to-transparent" />

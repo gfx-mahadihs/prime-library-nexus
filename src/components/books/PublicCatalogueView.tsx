@@ -1,7 +1,8 @@
 import { useSearch, useNavigate } from "@tanstack/react-router";
 import { useMemo, useState } from "react";
 import { Page, PageTitle } from "@/components/layout/AppLayout";
-import { BookCard, BookGrid, FeaturedBookCard } from "@/components/books/BookCard";
+import { BookCard, BookGrid } from "@/components/books/BookCard";
+import { FeaturedBooksScroller } from "@/components/books/FeaturedBooksScroller";
 import { Chip, FilterPanel, SearchBar } from "@/components/books/SearchFilters";
 import { EmptyState } from "@/components/shared/states";
 import { useSuspenseQuery } from "@tanstack/react-query";
@@ -92,11 +93,7 @@ export function Explore() {
         {!isFiltered && featured.length > 0 && (
           <section className="mt-8">
             <h2 className="mb-4 text-lg font-extrabold tracking-tight">Featured</h2>
-            <div className="no-scrollbar -mx-4 flex snap-x gap-4 overflow-x-auto px-4 pb-4 sm:-mx-6 sm:px-6 md:mx-0 md:px-0">
-              {featured.map((b) => (
-                <FeaturedBookCard key={b.id} book={b} />
-              ))}
-            </div>
+            <FeaturedBooksScroller books={featured} />
           </section>
         )}
 

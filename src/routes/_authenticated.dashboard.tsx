@@ -1,7 +1,8 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { ArrowRight, CalendarClock } from "lucide-react";
 import { Page } from "@/components/layout/AppLayout";
-import { BookCard, FeaturedBookCard } from "@/components/books/BookCard";
+import { BookCard } from "@/components/books/BookCard";
+import { FeaturedBooksScroller } from "@/components/books/FeaturedBooksScroller";
 import { CategoryCard } from "@/components/books/CategoryCard";
 import { BorrowedBookCard, ReservationCard } from "@/components/books/cards";
 import { EmptyState, ErrorState, LoadingSkeleton, SectionHeader } from "@/components/shared/states";
@@ -92,11 +93,7 @@ function Dashboard() {
         ) : books.error ? (
           <ErrorState message={books.error.message} onRetry={() => books.refetch()} />
         ) : (
-          <div className="no-scrollbar -mx-4 flex snap-x gap-4 overflow-x-auto px-4 pb-4 sm:-mx-6 sm:px-6 md:mx-0 md:px-0">
-            {featured.map((b) => (
-              <FeaturedBookCard key={b.id} book={b} />
-            ))}
-          </div>
+          <FeaturedBooksScroller books={featured} />
         )}
       </section>
 

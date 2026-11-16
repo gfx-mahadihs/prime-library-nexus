@@ -168,6 +168,28 @@
   }
 }
 
+@keyframes featured-books-marquee {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+.featured-books-track {
+  display: flex;
+  width: max-content;
+  animation: featured-books-marquee 36s linear infinite;
+}
+
+.featured-books-group {
+  display: flex;
+  flex: none;
+  gap: 1rem;
+  padding-right: 1rem;
+}
+
 @utility title-xl {
   font-size: clamp(1.75rem, 5vw, 2.6rem);
   line-height: 1.1;
@@ -188,5 +210,13 @@
   *::after {
     animation-duration: 0.01ms !important;
     transition-duration: 0.01ms !important;
+  }
+
+  .featured-books-track {
+    animation: none;
+  }
+
+  .featured-books-scroller {
+    overflow-x: auto;
   }
 }
