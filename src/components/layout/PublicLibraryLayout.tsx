@@ -17,8 +17,11 @@ export function PublicLibraryLayout({ children }: { children: ReactNode }) {
             <Logo />
           </Link>
           <nav aria-label="Public library" className="flex items-center gap-1.5 sm:gap-2">
-            <Button asChild variant="ghost" size="sm">
+            <Button asChild variant="ghost" size="sm" className="hidden sm:inline-flex">
               <Link to="/explore">Explore</Link>
+            </Button>
+            <Button asChild variant="ghost" size="sm" className="hidden sm:inline-flex">
+              <Link to="/book-search">Search</Link>
             </Button>
             <Button asChild size="sm">
               <Link to="/login">
