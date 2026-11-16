@@ -13,14 +13,21 @@ export const resolvePublicBookCover = createServerFn({ method: "GET" })
     }),
   )
   .handler(async ({ data }) => {
+    const buildUrl = import.meta.env["VITE_SUPABASE_URL"];
+    const buildKey = import.meta.env["VITE_SUPABASE_PUBLISHABLE_KEY"];
     const runtimeConfigured =
       process.env["SUPABASE_URL"] && process.env["SUPABASE_PUBLISHABLE_KEY"];
-    const url = runtimeConfigured
-      ? process.env["SUPABASE_URL"]
-      : import.meta.env["VITE_SUPABASE_URL"];
-    const key = runtimeConfigured
-      ? process.env["SUPABASE_PUBLISHABLE_KEY"]
-      : import.meta.env["VITE_SUPABASE_PUBLISHABLE_KEY"];
+    const preferBuildConfig = process.env["VERCEL"] === "1" && buildUrl && buildKey;
+    const url = preferBuildConfig
+      ? buildUrl
+      : runtimeConfigured
+        ? process.env["SUPABASE_URL"]
+        : buildUrl;
+    const key = preferBuildConfig
+      ? buildKey
+      : runtimeConfigured
+        ? process.env["SUPABASE_PUBLISHABLE_KEY"]
+        : buildKey;
     if (!url || !key) throw new Error("Book cover is unavailable.");
     const client = createClient<Database>(url, key, {
       auth: { persistSession: false, autoRefreshToken: false },

@@ -6,13 +6,20 @@ import type { Book, Category } from "@/types/library";
 export const fetchPublicCatalogue = createServerFn({ method: "GET" }).handler(async () => {
   // External hosts may only provide the same public configuration used by Vite.
   // Prefer the runtime pair in Lovable, where the browser URL can be a preview proxy.
+  const buildUrl = import.meta.env["VITE_SUPABASE_URL"];
+  const buildKey = import.meta.env["VITE_SUPABASE_PUBLISHABLE_KEY"];
   const runtimeConfigured = process.env["SUPABASE_URL"] && process.env["SUPABASE_PUBLISHABLE_KEY"];
-  const url = runtimeConfigured
-    ? process.env["SUPABASE_URL"]
-    : import.meta.env["VITE_SUPABASE_URL"];
-  const key = runtimeConfigured
-    ? process.env["SUPABASE_PUBLISHABLE_KEY"]
-    : import.meta.env["VITE_SUPABASE_PUBLISHABLE_KEY"];
+  const preferBuildConfig = process.env["VERCEL"] === "1" && buildUrl && buildKey;
+  const url = preferBuildConfig
+    ? buildUrl
+    : runtimeConfigured
+      ? process.env["SUPABASE_URL"]
+      : buildUrl;
+  const key = preferBuildConfig
+    ? buildKey
+    : runtimeConfigured
+      ? process.env["SUPABASE_PUBLISHABLE_KEY"]
+      : buildKey;
   if (!url || !key) throw new Error("The catalogue is temporarily unavailable.");
   const client = createClient<Database>(url, key, {
     auth: { persistSession: false, autoRefreshToken: false, storage: undefined },
