@@ -2,8 +2,11 @@ import { createFileRoute } from '@tanstack/react-router';
 import { Explore } from '@/components/books/PublicCatalogueView';
 import { publicCatalogueQuery } from '@/services/public-catalogue';
 import { PublicLibraryLayout } from '@/components/layout/PublicLibraryLayout';
-import { ErrorState, LoadingSkeleton, EmptyState } from '@/components/shared/states';
+import { LoadingSkeleton, EmptyState } from '@/components/shared/states';
+import { validateCatalogueSearch } from '@/services/catalogue-search';
+import { CatalogueError } from '@/components/books/CatalogueError';
 export const Route = createFileRoute('/')({
+  validateSearch: validateCatalogueSearch,
   loader: ({ context }) => context.queryClient.ensureQueryData(publicCatalogueQuery),
   head: () => ({ meta: [
     { title: 'গ্রন্থাগার — Public Library Catalogue' },
@@ -14,6 +17,6 @@ export const Route = createFileRoute('/')({
   ] }),
   component: Explore,
   pendingComponent: () => <PublicLibraryLayout><LoadingSkeleton count={12} /></PublicLibraryLayout>,
-  errorComponent: () => <PublicLibraryLayout><ErrorState message="The catalogue could not be loaded." onRetry={() => window.location.reload()} /></PublicLibraryLayout>,
+  errorComponent: CatalogueError,
   notFoundComponent: () => <PublicLibraryLayout><EmptyState title="Catalogue not found" /></PublicLibraryLayout>,
 });

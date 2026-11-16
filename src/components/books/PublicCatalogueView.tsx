@@ -1,27 +1,22 @@
 import { useSearch, useNavigate } from "@tanstack/react-router";
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import { Page, PageTitle } from "@/components/layout/AppLayout";
 import { BookCard, BookGrid, FeaturedBookCard } from "@/components/books/BookCard";
-import { Chip, FilterPanel, SearchBar, useDebounced } from "@/components/books/SearchFilters";
-import { EmptyState, ErrorState, LoadingSkeleton } from "@/components/shared/states";
+import { Chip, FilterPanel, SearchBar } from "@/components/books/SearchFilters";
+import { EmptyState } from "@/components/shared/states";
 import { useSuspenseQuery } from "@tanstack/react-query";
 import { publicCatalogueQuery } from "@/services/public-catalogue";
 import { filterCatalogue } from "@/services/catalogue";
 import { PublicLibraryLayout } from "@/components/layout/PublicLibraryLayout";
-import type { BookFilters, SortKey } from "@/types/library";
+import type { BookFilters } from "@/types/library";
 
 export function Explore() {
   const filters: BookFilters = useSearch({ strict: false });
-  const navigate = useNavigate({ from: "/explore" });
-  const [q, setQ] = useState(filters.q ?? "");
+  const navigate = useNavigate();
   const [open, setOpen] = useState(false);
-  const dq = useDebounced(q);
-
-  const update = (patch: Partial<BookFilters>) => navigate({ to: "/explore", search: { ...filters, ...patch }, replace: true });
-  useEffect(() => {
-    if ((dq || undefined) !== filters.q) update({ q: dq || undefined });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [dq]);
+  const update = (patch: Partial<BookFilters>) => navigate({
+    to: '/explore', search: previous => ({ ...previous, ...patch }), replace: true,
+  });
 
   const { data: catalogue } = useSuspenseQuery(publicCatalogueQuery);
   const all = { data: catalogue.books };
@@ -40,7 +35,7 @@ export function Explore() {
   return (
     <PublicLibraryLayout><Page>
       <PageTitle title="Explore Books" subtitle="Discover your next great read." />
-      <SearchBar value={q} onChange={setQ} onToggleFilters={() => setOpen((o) => !o)} filtersOpen={open} />
+      <SearchBar value={filters.q ?? ''} onChange={q => { void update({ q: q.slice(0, 100) || undefined }); }} onToggleFilters={() => setOpen((o) => !o)} filtersOpen={open} />
       <FilterPanel open={open} filters={filters} categories={cats.data ?? []} authors={authors.data ?? []} languages={languages} years={years} onChange={update} />
 
       <div className="no-scrollbar -mx-5 mt-5 flex gap-2 overflow-x-auto px-5 py-1 md:mx-0 md:px-0" role="group" aria-label="Categories">

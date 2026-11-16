@@ -18,3 +18,4 @@
 - Book cover uploads and signed URL resolution go through LibraryService; store durable private-storage references, not expiring URLs. Why: admin-only upload policies protect writes while signed-in readers can view covers.
 
 - Public catalogue reads use the publishable-key server function through LibraryService; public routes reuse catalogue/detail views and never load private member data while signed out. Why: supports SSR without bypassing RLS or changing the C++ adapter boundary.
+- Both public catalogue entry routes share search validation and query-reset retries; search inputs read URL state directly. Why: prevents filter navigation from erasing search and retries from reloading a failed SSR page.

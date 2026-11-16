@@ -1,4 +1,5 @@
 # Secure administration
+- [x] Repair Explore search synchronization and retries; verify public/signed-in browsing on desktop and mobile and add external-host configuration fallback.
 - [x] Open homepage, catalogue, and book details without login, preserving member actions.
 - [x] Grant public catalogue/cover reads only and verify administrative denial.
 - [x] Test signed-out browsing, filters, details, and mobile layout.

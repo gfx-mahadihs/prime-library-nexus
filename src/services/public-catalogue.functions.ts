@@ -4,8 +4,11 @@ import type { Database } from '@/integrations/supabase/types';
 import type { Book, Category } from '@/types/library';
 
 export const fetchPublicCatalogue = createServerFn({ method: 'GET' }).handler(async () => {
-  const url = process.env['SUPABASE_URL'];
-  const key = process.env['SUPABASE_PUBLISHABLE_KEY'];
+  // External hosts may only provide the same public configuration used by Vite.
+  // Prefer the runtime pair in Lovable, where the browser URL can be a preview proxy.
+  const runtimeConfigured = process.env['SUPABASE_URL'] && process.env['SUPABASE_PUBLISHABLE_KEY'];
+  const url = runtimeConfigured ? process.env['SUPABASE_URL'] : import.meta.env['VITE_SUPABASE_URL'];
+  const key = runtimeConfigured ? process.env['SUPABASE_PUBLISHABLE_KEY'] : import.meta.env['VITE_SUPABASE_PUBLISHABLE_KEY'];
   if (!url || !key) throw new Error('The catalogue is temporarily unavailable.');
   const client = createClient<Database>(url, key, {
     auth: { persistSession: false, autoRefreshToken: false, storage: undefined },
@@ -21,7 +24,10 @@ export const fetchPublicCatalogue = createServerFn({ method: 'GET' }).handler(as
   const rows = [];
   for (let offset = 0; ; offset += 500) {
     const result = await client.from('books').select('id,title,isbn,publisher,department,language,publication_year,description,cover_url,rating,popularity,pages,featured,created_at,category:categories(id,name,slug,tone),book_authors(position,author:authors(name))').order('id').range(offset, offset + 499);
-    if (result.error) throw new Error('We could not load the catalogue. Please try again.');
+    if (result.error) {
+      console.error('Public catalogue books read failed', { code: result.error.code });
+      throw new Error('We could not load the catalogue. Please try again.');
+    }
     rows.push(...result.data);
     if (result.data.length < 500) break;
   }
@@ -29,7 +35,10 @@ export const fetchPublicCatalogue = createServerFn({ method: 'GET' }).handler(as
     client.from('categories').select('id,name,slug,description,tone').order('sort_order'),
     client.rpc('get_book_availability'),
   ]);
-  if (categories.error || availability.error) throw new Error('We could not load the catalogue. Please try again.');
+  if (categories.error || availability.error) {
+    console.error('Public catalogue metadata read failed', { categories: categories.error?.code, availability: availability.error?.code });
+    throw new Error('We could not load the catalogue. Please try again.');
+  }
   const counts = new Map(availability.data.map(a => [a.book_id, a]));
   const books: Book[] = rows.map(r => ({
     id: r.id, title: r.title, isbn: r.isbn, publisher: r.publisher, department: r.department,
