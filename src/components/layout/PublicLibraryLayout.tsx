@@ -6,9 +6,44 @@ import { Button } from "@/components/ui/button";
 import { useAuth } from "@/contexts/auth-context";
 import { AppLayout } from "./AppLayout";
 
-export function PublicLibraryLayout({ children }: { children: ReactNode }) {
+export function PublicLibraryLayout({
+  children,
+  variant = "default",
+}: {
+  children: ReactNode;
+  variant?: "default" | "book-corner";
+}) {
   const { user } = useAuth();
   if (user) return <AppLayout>{children}</AppLayout>;
+  if (variant === "book-corner") {
+    return (
+      <div className="min-h-screen overflow-x-hidden bg-[#f7f7f5] text-[#111827]">
+        <header className="border-b border-[#111827]/20">
+          <div className="mx-auto flex min-h-11 max-w-[1440px] items-center justify-between px-5 sm:px-8">
+            <Link
+              to="/"
+              aria-label="Time and Space home"
+              className="font-serif text-[11px] font-semibold tracking-[-0.03em]"
+            >
+              time &amp; space.
+            </Link>
+            <nav aria-label="Book Corner" className="flex items-center gap-4 text-[9px]">
+              <Link to="/explore" className="transition-opacity hover:opacity-50">
+                Book Corner
+              </Link>
+              <Link to="/book-search" className="transition-opacity hover:opacity-50">
+                Search
+              </Link>
+              <Link to="/login" className="transition-opacity hover:opacity-50">
+                Login
+              </Link>
+            </nav>
+          </div>
+        </header>
+        <main className="mx-auto max-w-[1440px] px-5 py-5 sm:px-8 sm:py-7">{children}</main>
+      </div>
+    );
+  }
   return (
     <div className="min-h-screen bg-background">
       <header className="sticky top-0 z-40 border-b bg-background/95 backdrop-blur-xl">

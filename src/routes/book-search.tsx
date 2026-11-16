@@ -14,13 +14,13 @@ export const Route = createFileRoute("/book-search")({
   validateSearch: validateCatalogueSearch,
   loader: ({ context }) => context.queryClient.ensureQueryData(publicCatalogueQuery),
   pendingComponent: () => (
-    <PublicLibraryLayout>
+    <PublicLibraryLayout variant="book-corner">
       <LoadingSkeleton count={12} />
     </PublicLibraryLayout>
   ),
   errorComponent: CatalogueError,
   notFoundComponent: () => (
-    <PublicLibraryLayout>
+    <PublicLibraryLayout variant="book-corner">
       <EmptyState title="Search not found" />
     </PublicLibraryLayout>
   ),
@@ -42,7 +42,7 @@ function BookSearch() {
   const { data: catalogue } = useSuspenseQuery(publicCatalogueQuery);
 
   return (
-    <PublicLibraryLayout>
+    <PublicLibraryLayout variant="book-corner">
       <Page>
         <BookCorner
           books={catalogue.books}

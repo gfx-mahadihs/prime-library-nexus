@@ -1,8 +1,7 @@
-import { ArrowDownRight, ArrowUpRight, Search } from "lucide-react";
+import { Search } from "lucide-react";
 import { useState } from "react";
 import type { Book, BookFilters, Category } from "@/types/library";
 import { filterCatalogue } from "@/services/catalogue";
-import { BookCard, BookGrid } from "./BookCard";
 import { Chip, FilterPanel, SearchBar } from "./SearchFilters";
 import { EmptyState } from "@/components/shared/states";
 import { cn } from "@/lib/utils";
@@ -10,44 +9,59 @@ import { bookCornerImages } from "@/data/bookCornerImages";
 
 type CornerImage = { id: string; image: string; alt: string; title?: string };
 
-function EditorialImage({
-  image,
-  className,
-  priority = false,
-}: {
-  image: CornerImage;
-  className?: string;
-  priority?: boolean;
-}) {
+function EditorialImage({ image, className }: { image: CornerImage; className?: string }) {
   const [failed, setFailed] = useState(false);
+
   return (
-    <div className={cn("relative overflow-hidden bg-muted", className)}>
+    <div className={cn("relative overflow-hidden bg-[#e6e5df]", className)}>
       {failed ? (
-        <div className="absolute inset-0 grid place-items-center bg-gradient-to-br from-bluegray/60 via-card to-lime/40">
-          <span className="px-5 text-center text-xs font-semibold uppercase tracking-[0.18em] text-muted-foreground">
-            Replaceable image
-          </span>
-        </div>
+        <div className="absolute inset-0 bg-gradient-to-br from-[#d6d9cd] via-[#eeeee9] to-[#aeb9bd]" />
       ) : (
         <img
           src={image.image}
           alt={image.alt}
-          loading={priority ? "eager" : "lazy"}
+          loading="lazy"
           onError={() => setFailed(true)}
-          className="size-full object-cover transition-transform duration-700 ease-out group-hover:scale-105"
+          className="size-full object-cover"
         />
       )}
     </div>
   );
 }
 
-function SectionRule({ children }: { children: React.ReactNode }) {
+function RuleLabel({ children }: { children: React.ReactNode }) {
   return (
-    <div className="flex items-center gap-4 border-t border-foreground/15 pt-3">
-      <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-muted-foreground">
-        {children}
-      </span>
-      <span className="h-px flex-1 bg-foreground/10" />
+    <div className="border-y border-[#111827]/25 py-2">
+      <h1 className="font-serif text-sm font-medium tracking-[-0.02em]">{children}</h1>
+    </div>
+  );
+}
+
+function ResultList({ books }: { books: Book[] }) {
+  if (!books.length) {
+    return (
+      <EmptyState title="Nothing found yet" description="Try another title, author, or category." />
+    );
+  }
+
+  return (
+    <div className="divide-y divide-[#111827]/15 border-y border-[#111827]/20">
+      {books.map((book) => (
+        <div
+          key={book.id}
+          className="grid gap-1 py-3 text-xs sm:grid-cols-[1fr_1fr_auto] sm:items-center sm:gap-4"
+        >
+          <p className="font-medium">{book.title}</p>
+          <p className="text-[#111827]/60">
+            {book.authors.join(", ")} · {book.category?.name ?? "Uncategorised"}
+          </p>
+          <p className="text-[10px] uppercase tracking-[0.12em] text-[#111827]/50">
+            {book.availableCopies > 0
+              ? `${book.availableCopies} available`
+              : "Currently unavailable"}
+          </p>
+        </div>
+      ))}
     </div>
   );
 }
@@ -80,95 +94,68 @@ export function BookCorner({
     filters.year ||
     filters.availableOnly,
   );
-  const gallery = bookCornerImages.gallery;
 
   return (
-    <div className="mx-auto max-w-7xl">
-      <header className="border-b border-foreground/15 pb-5">
-        <div className="flex items-start justify-between gap-4">
-          <p className="text-[11px] font-bold uppercase tracking-[0.28em] text-muted-foreground">
-            The Book Corner
-          </p>
-          <span className="text-xs text-muted-foreground">01 / 05</span>
-        </div>
-        <div className="mt-10 grid gap-6 md:grid-cols-[1fr_auto] md:items-end">
-          <h1 className="max-w-3xl font-serif text-5xl leading-[0.96] tracking-[-0.06em] text-foreground sm:text-7xl lg:text-8xl">
-            A quiet place
-            <br />
-            for curious minds.
-          </h1>
-          <p className="max-w-[18rem] text-sm leading-6 text-muted-foreground">
-            Browse a considered collection of stories, ideas, and places to take with you.
-          </p>
-        </div>
-      </header>
+    <div className="mx-auto max-w-[1180px]">
+      <RuleLabel>Book Corner</RuleLabel>
+      <p className="max-w-3xl border-b border-[#111827]/25 py-3 text-[10px] leading-4 text-[#111827]/70 sm:text-[11px]">
+        A small collection of carefully selected books and visual references for people who enjoy
+        thoughtful spaces, useful ideas, and beautiful things.
+      </p>
 
-      <section className="grid gap-8 border-b border-foreground/15 py-8 md:grid-cols-[1.4fr_0.6fr] md:py-12">
-        <div className="group relative min-h-[22rem] overflow-hidden bg-ink sm:min-h-[31rem]">
-          <EditorialImage image={bookCornerImages.featured} priority className="absolute inset-0" />
-          <div className="absolute inset-0 bg-gradient-to-t from-ink/80 via-transparent to-transparent" />
-          <div className="absolute inset-x-5 bottom-5 flex items-end justify-between gap-4 text-primary-foreground sm:inset-x-8 sm:bottom-8">
-            <div>
-              <p className="text-[10px] font-bold uppercase tracking-[0.22em] text-lime">
-                Featured
-              </p>
-              <h2 className="mt-2 font-serif text-3xl tracking-tight sm:text-5xl">
-                {bookCornerImages.featured.title}
-              </h2>
-            </div>
-            <ArrowUpRight className="size-7 shrink-0" />
-          </div>
-        </div>
-        <div className="flex flex-col justify-between gap-8">
-          <p className="max-w-xs font-serif text-2xl leading-tight sm:text-3xl">
-            “The best discoveries often begin with a little time and a good question.”
-          </p>
-          <div className="flex items-end justify-between border-t border-foreground/15 pt-4 text-xs text-muted-foreground">
-            <span>Notes for slow afternoons</span>
-            <ArrowDownRight className="size-5 text-foreground" />
-          </div>
-        </div>
-      </section>
-
-      <section className="py-8 sm:py-12">
-        <SectionRule>Collected references</SectionRule>
-        <div className="mt-5 grid grid-cols-2 gap-3 sm:grid-cols-4 sm:gap-5">
-          {gallery.slice(0, 4).map((image, index) => (
-            <div
+      <section aria-label="Book Corner collection" className="py-7 sm:py-10">
+        <div className="grid grid-cols-12 items-end gap-1 sm:gap-2">
+          {bookCornerImages.shelf.map((image, index) => (
+            <EditorialImage
               key={image.id}
+              image={image}
               className={cn(
-                "group",
-                index === 1 && "sm:translate-y-10",
-                index === 3 && "sm:translate-y-5",
+                "col-span-1 aspect-[3/10] sm:aspect-[3/12]",
+                index === 3 && "col-span-2 aspect-[4/7] sm:aspect-[4/8]",
+                index === 7 && "col-span-2 aspect-[4/7] sm:aspect-[4/8]",
               )}
-            >
-              <EditorialImage image={image} className="aspect-[4/5]" />
-              <p className="mt-3 text-[10px] font-bold uppercase tracking-[0.16em] text-muted-foreground">
-                0{index + 1} / 04
-              </p>
-            </div>
+            />
+          ))}
+        </div>
+
+        <div className="mt-7 grid grid-cols-12 items-end gap-1 sm:mt-10 sm:gap-2">
+          {bookCornerImages.gallery.map((image, index) => (
+            <EditorialImage
+              key={image.id}
+              image={image}
+              className={cn(
+                "col-span-1 aspect-[3/9] sm:aspect-[3/11]",
+                index === 2 && "col-span-3 aspect-[5/4] sm:aspect-[5/3]",
+                index === 4 && "col-span-2 aspect-[4/7] sm:aspect-[4/8]",
+              )}
+            />
+          ))}
+        </div>
+
+        <div className="mt-7 grid grid-cols-3 gap-1 sm:mt-10 sm:grid-cols-6 sm:gap-2">
+          {bookCornerImages.collections.map((image) => (
+            <EditorialImage
+              key={image.id}
+              image={image}
+              className="aspect-[4/3] first:col-span-2 sm:first:col-span-2"
+            />
           ))}
         </div>
       </section>
 
-      <section className="border-y border-foreground/15 py-8 sm:py-12">
-        <div className="grid gap-8 md:grid-cols-[0.7fr_1.3fr] md:gap-14">
+      <section className="border-t border-[#111827]/25 pt-5">
+        <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
           <div>
-            <SectionRule>Find your next read</SectionRule>
-            <h2 className="mt-5 font-serif text-4xl leading-none tracking-[-0.04em] sm:text-6xl">
-              Search the
-              <br />
-              collection.
-            </h2>
-            <p className="mt-5 max-w-xs text-sm leading-6 text-muted-foreground">
-              {mode === "search"
-                ? "Use the search to find a title, author, or subject that stays with you."
-                : "Start with a word, a name, or a feeling. We will take it from there."}
+            <p className="font-serif text-lg">
+              {mode === "search" ? "Search the collection" : "Find a book"}
+            </p>
+            <p className="mt-1 text-[10px] text-[#111827]/60">
+              {isFiltered ? `${filteredBooks.length} matching titles` : `${books.length} titles`}
             </p>
           </div>
-          <div>
-            <div className="flex items-center gap-3">
-              <Search className="size-4 text-muted-foreground" />
+          <div className="w-full sm:max-w-md">
+            <div className="flex items-center gap-2">
+              <Search className="size-3.5 text-[#111827]/55" />
               <SearchBar
                 value={filters.q ?? ""}
                 onChange={(q) => onChange({ q: q.slice(0, 100) || undefined })}
@@ -185,7 +172,7 @@ export function BookCorner({
               years={years}
               onChange={onChange}
             />
-            <div className="no-scrollbar mt-5 flex gap-2 overflow-x-auto pb-1">
+            <div className="no-scrollbar mt-3 flex gap-1.5 overflow-x-auto pb-1">
               <Chip active={!filters.category} onClick={() => onChange({ category: undefined })}>
                 All
               </Chip>
@@ -201,46 +188,8 @@ export function BookCorner({
             </div>
           </div>
         </div>
-      </section>
-
-      <section className="py-8 sm:py-12">
-        <div className="flex items-end justify-between gap-4">
-          <div>
-            <SectionRule>{isFiltered ? "Matching results" : "The collection"}</SectionRule>
-            <h2 className="mt-4 font-serif text-4xl tracking-[-0.04em] sm:text-5xl">
-              {isFiltered ? "For you" : "Worth a closer look"}
-            </h2>
-          </div>
-          <span className="text-xs text-muted-foreground">{filteredBooks.length} titles</span>
-        </div>
-        <div className="mt-7">
-          {filteredBooks.length ? (
-            <BookGrid>
-              {filteredBooks.map((book) => (
-                <BookCard key={book.id} book={book} />
-              ))}
-            </BookGrid>
-          ) : (
-            <EmptyState
-              title="Nothing found yet"
-              description="Try another title, author, or category."
-            />
-          )}
-        </div>
-      </section>
-
-      <section className="border-t border-foreground/15 py-8 sm:py-12">
-        <SectionRule>More to explore</SectionRule>
-        <div className="mt-5 grid gap-5 md:grid-cols-3">
-          {bookCornerImages.collections.map((collection) => (
-            <div key={collection.id} className="group">
-              <EditorialImage image={collection} className="aspect-[4/3]" />
-              <div className="mt-3 flex items-center justify-between gap-3">
-                <h3 className="font-serif text-2xl">{collection.title}</h3>
-                <ArrowUpRight className="size-5 transition-transform group-hover:-translate-y-1 group-hover:translate-x-1" />
-              </div>
-            </div>
-          ))}
+        <div className="mt-6">
+          <ResultList books={filteredBooks} />
         </div>
       </section>
     </div>

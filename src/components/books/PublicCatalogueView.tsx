@@ -19,7 +19,7 @@ export function Explore() {
   const { data: catalogue } = useSuspenseQuery(publicCatalogueQuery);
 
   return (
-    <PublicLibraryLayout>
+    <PublicLibraryLayout variant="book-corner">
       <Page>
         <BookCorner
           books={catalogue.books}
