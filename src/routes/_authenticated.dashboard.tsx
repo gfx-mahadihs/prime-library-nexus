@@ -5,6 +5,7 @@ import { BookCard } from "@/components/books/BookCard";
 import { FeaturedBooksScroller } from "@/components/books/FeaturedBooksScroller";
 import { CategoryCard } from "@/components/books/CategoryCard";
 import { BorrowedBookCard, ReservationCard } from "@/components/books/cards";
+import { InteractiveBookshelf } from "@/components/books/InteractiveBookshelf";
 import { EmptyState, ErrorState, LoadingSkeleton, SectionHeader } from "@/components/shared/states";
 import {
   useBooks,
@@ -85,6 +86,22 @@ function Dashboard() {
           <ArrowRight className="size-4" />
         </Link>
       )}
+
+      {/* Interactive Bookshelf (Reference Video Aesthetic) */}
+      <section className="mb-12">
+        {books.isLoading ? (
+          <LoadingSkeleton count={3} variant="list" />
+        ) : books.error ? (
+          <ErrorState message={books.error.message} onRetry={() => books.refetch()} />
+        ) : (
+          <InteractiveBookshelf
+            books={all}
+            categories={cats.data ?? []}
+            title="Book Corner & Library Shelf"
+            subtitle="Curated library of classic and modern works. Select any volume to explore details and preview the first few pages."
+          />
+        )}
+      </section>
 
       <section className="mb-12">
         <SectionHeader title="Featured Books" action={seeAll("/explore")} />

@@ -6,6 +6,7 @@ import { Chip, FilterPanel, SearchBar } from "./SearchFilters";
 import { EmptyState } from "@/components/shared/states";
 import { cn } from "@/lib/utils";
 import { bookCornerImages } from "@/data/bookCornerImages";
+import { InteractiveBookshelf } from "@/components/books/InteractiveBookshelf";
 
 type CornerImage = { id: string; image: string; alt: string; title?: string };
 
@@ -103,45 +104,15 @@ export function BookCorner({
         thoughtful spaces, useful ideas, and beautiful things.
       </p>
 
-      <section aria-label="Book Corner collection" className="py-7 sm:py-10">
-        <div className="grid grid-cols-12 items-end gap-1 sm:gap-2">
-          {bookCornerImages.shelf.map((image, index) => (
-            <EditorialImage
-              key={image.id}
-              image={image}
-              className={cn(
-                "col-span-1 aspect-[3/10] sm:aspect-[3/12]",
-                index === 3 && "col-span-2 aspect-[4/7] sm:aspect-[4/8]",
-                index === 7 && "col-span-2 aspect-[4/7] sm:aspect-[4/8]",
-              )}
-            />
-          ))}
-        </div>
-
-        <div className="mt-7 grid grid-cols-12 items-end gap-1 sm:mt-10 sm:gap-2">
-          {bookCornerImages.gallery.map((image, index) => (
-            <EditorialImage
-              key={image.id}
-              image={image}
-              className={cn(
-                "col-span-1 aspect-[3/9] sm:aspect-[3/11]",
-                index === 2 && "col-span-3 aspect-[5/4] sm:aspect-[5/3]",
-                index === 4 && "col-span-2 aspect-[4/7] sm:aspect-[4/8]",
-              )}
-            />
-          ))}
-        </div>
-
-        <div className="mt-7 grid grid-cols-3 gap-1 sm:mt-10 sm:grid-cols-6 sm:gap-2">
-          {bookCornerImages.collections.map((image) => (
-            <EditorialImage
-              key={image.id}
-              image={image}
-              className="aspect-[4/3] first:col-span-2 sm:first:col-span-2"
-            />
-          ))}
-        </div>
-      </section>
+      <div className="py-4">
+        <InteractiveBookshelf
+          books={books}
+          categories={categories}
+          initialCategory={filters.category}
+          title="Virtual Curated Bookshelf"
+          subtitle="Explore volumes on physical shelves. Click any book spine to inspect publication details and preview the opening pages."
+        />
+      </div>
 
       <section className="border-t border-[#111827]/25 pt-5 dark:border-white/25">
         <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
