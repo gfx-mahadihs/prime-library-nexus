@@ -11,7 +11,9 @@
     "lint": "eslint .",
     "format": "prettier --write .",
     "test": "vitest run",
-    "test:watch": "vitest"
+    "test:watch": "vitest",
+    "build:cpp": "g++ -std=c++14 -O2 server_cpp/main.cpp -o server_cpp/library_server.exe -lws2_32",
+    "start:cpp": "server_cpp\\library_server.exe"
   },
   "overrides": {
     "rolldown": "1.2.1"
